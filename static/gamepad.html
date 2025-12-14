@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Joystick Virtual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+  :root {
+    --bg-1: #f5f5f5;
+    --bg-2: #e8e8e8;
+    --card: #ffffff;
+    --accent: #0078d7;
+    --accent-2: #00c4b3;
+    --muted: #555;
+    --on: #000;
+    --danger: #ff3b30;
+    --btn-size: calc(min(80px, 18vw));
+    --btn-large: calc(min(100px, 24vw));
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Press Start 2P', monospace;
+    color: var(--on);
+    background: linear-gradient(180deg, var(--bg-1), var(--bg-2));
+    -webkit-font-smoothing: antialiased;
+    text-align: center
+  }
+
+  .app {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 16px
+  }
+
+  .card {
+    background: var(--card);
+    border: 2px solid #ccc;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15)
+  }
+
+  header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .sub {
+    color: var(--muted);
+    font-size: 10px
+  }
+
+  .players {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px
+  }
+
+  .player-btn {
+    padding: 20px 24px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #f0f0f0, #ddd);
+    border: 2px solid #bbb;
+    cursor: pointer;
+    width: 80%;
+    text-align: center;
+    font-weight: 600;
+    transition: transform .12s ease, box-shadow .12s ease, font-size .12s;
+    font-size: 12px;
+  }
+
+  .player-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2)
+  }
+
+  .screen-flex {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    flex-wrap: wrap
+  }
+
+  .left-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px
+  }
+
+  .dpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 6px;
+    touch-action: none
+  }
+
+  .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #fafafa, #eee);
+    min-width: var(--btn-size);
+    min-height: var(--btn-size);
+    user-select: none;
+    border: 2px solid #ccc;
+    font-weight: 700;
+    font-size: 10px
+  }
+
+  .cell.hidden {
+    visibility: hidden
+  }
+
+  .btn {
+    cursor: pointer;
+    transition: all .1s ease;
+  }
+
+  .btn.disabled {
+    opacity: 0.4;
+    filter: grayscale(100%);
+    pointer-events: none;
+  }
+
+  .btn.pressed {
+    background: var(--accent-2);
+    color: white;
+    border-color: #009b8a;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3)
+  }
+
+  .btn-A {
+    background: linear-gradient(180deg, #ffebee, #ffcdd2)
+  }
+
+  .btn-A.pressed {
+    background: var(--danger);
+    color: #fff;
+  }
+
+  .btn-B {
+    background: linear-gradient(180deg, #e3f2fd, #bbdefb)
+  }
+
+  .btn-B.pressed {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .ab-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center
+  }
+
+  .ab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px
+  }
+
+  .status {
+    margin-top: 12px;
+    font-size: 10px;
+    color: var(--muted)
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 9999
+  }
+
+  .overlay.show {
+    display: flex
+  }
+
+  .modal {
+    background: #fff;
+    padding: 18px;
+    border-radius: 10px;
+    width: min(500px, 90%);
+    border: 2px solid #ccc;
+    text-align: center
+  }
+
+  .modal h2 {
+    margin: 0 0 8px;
+    font-size: 12px
+  }
+
+  .modal p {
+    color: #444;
+    font-size: 10px
+  }
+
+  .modal .actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: center
+  }
+
+  .btn-ghost,
+  .btn-danger {
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 10px
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border: 2px solid #aaa
+  }
+
+  .btn-danger {
+    background: var(--danger);
+    border: none;
+    color: white
+  }
+
+  @media (max-width:600px) {
+    .cell {
+      min-width: calc(min(60px, 22vw));
+      min-height: calc(min(60px, 22vw))
+    }
+
+    .btn {
+      min-width: calc(min(80px, 24vw));
+      min-height: calc(min(80px, 24vw))
+    }
+
+    .player-btn {
+      font-size: 10px;
+      padding: 16px 18px;
+    }
+  }
+  </style>
+</head>
+
+<body>
+  <div class="app card" id="app">
+    <header>
+      <h1>🎮 Joystick Virtual 🎮</h1>
+      <div class="sub">Selecione um jogador e controle com o joystick</div>
+    </header>
+    <div id="screen"></div>
+    <div class="status" id="status">Carregando jogadores...</div>
+  </div>
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h2 id="overlay-title">Erro</h2>
+      <p id="overlay-msg">Mensagem</p>
+      <div class="actions"><button class="btn-ghost" id="overlay-ok">Voltar</button></div>
+    </div>
+  </div>
+  <script>
+  const queryString = window.location.search; 
+  const urlParams = new URLSearchParams(queryString);
+  const mccHost = urlParams.get('mccHost');
+  const fetchPlayersUrl = location.protocol + '//' + mccHost + '/players';
+  const wsBase = (location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + mccHost + '/gamepad';
+  const BUTTON_ORDER = ['up', 'down', 'left', 'right', 'upLeft', 'upRight', 'downLeft', 'downRight', 'A', 'B'];
+  const screen = document.getElementById('screen');
+  const statusEl = document.getElementById('status');
+  const overlay = document.getElementById('overlay');
+  const overlayMsg = document.getElementById('overlay-msg');
+  const overlayTitle = document.getElementById('overlay-title');
+  const overlayOk = document.getElementById('overlay-ok');
+  let selectedPlayer = null;
+  let socket = null;
+  let pointerMap = new Map(); // pointerId -> btnName
+  let keyMap = new Map();
+  const pressed = {};
+  BUTTON_ORDER.forEach(b => pressed[b] = false);
+
+  function showStatus(t) {
+    statusEl.textContent = t
+  }
+
+  function showPopup(t, m) {
+    overlayTitle.textContent = t;
+    overlayMsg.textContent = m;
+    overlay.classList.add('show');
+  }
+
+  function hidePopup() {
+    overlay.classList.remove('show');
+  }
+  overlayOk.onclick = () => {
+    hidePopup();
+    safeCloseSocket();
+    loadPlayerList();
+  };
+
+  function safeCloseSocket() {
+    if(socket) {
+      try {
+        socket.close();
+      } catch (e) {}
+      socket = null;
+    }
+  }
+  async function loadPlayerList() {
+    showStatus('Buscando jogadores...');
+    try {
+      const res = await fetch(fetchPlayersUrl);
+      const players = await res.json();
+      renderPlayerSelection(players);
+      showStatus('Selecione o jogador.');
+    } catch (e) {
+      screen.innerHTML = '<p>Erro ao buscar jogadores.</p>';
+    }
+  }
+
+  function renderPlayerSelection(players) {
+    screen.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.className = 'players';
+
+    Object.entries(players).forEach(([id, info]) => {
+      const b = document.createElement('button');
+      b.className = 'player-btn';
+      b.disabled = info.isConnected;
+      b.textContent = info.label;
+      b.onclick = () => selectPlayer({
+        id: id,
+        label: info.label,
+        buttons: new Set(info.buttons.map((i) => BUTTON_ORDER[i]))
+      });
+      wrap.appendChild(b)
+      // console.log(`Key: ${key}, Value: ${value}`);
+    });
+
+    // players.forEach(p => {
+    // });
+    screen.appendChild(wrap);
+  }
+
+  function selectPlayer(p) {
+    selectedPlayer = p;
+    renderJoystick(p.buttons);
+    setupWebSocket();
+  }
+
+  function renderJoystick(buttons) {
+    screen.innerHTML = '';
+    const container = document.createElement('div');
+    container.className = 'screen-flex';
+    const left = document.createElement('div');
+    left.className = 'left-col';
+    const d = document.createElement('div');
+    d.className = 'dpad';
+    const dirs = [
+      ['upLeft', '↖'],
+      ['up', '▲'],
+      ['upRight', '↗'],
+      ['left', '◀'],
+      ['', ''],
+      ['right', '▶'],
+      ['downLeft', '↙'],
+      ['down', '▼'],
+      ['downRight', '↘']
+    ];
+    dirs.forEach(([name, icon]) => {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      if(name) {
+        cell.classList.add('btn');
+        cell.dataset.btn = name;
+        cell.textContent = icon;
+        if(!buttons.has(name)) {
+          cell.classList.add("disabled");
+        }
+      } else {
+        cell.classList.add('hidden');
+      }
+      d.appendChild(cell)
+    });
+    left.appendChild(d);
+    const right = document.createElement('div');
+    right.className = 'ab-wrap';
+    const abGrid = document.createElement('div');
+    abGrid.className = 'ab-grid';
+    const btnA = document.createElement('div');
+    btnA.className = 'cell btn btn-A';
+    btnA.textContent = 'A';
+    btnA.dataset.btn = 'A';
+    const btnB = document.createElement('div');
+    btnB.className = 'cell btn btn-B';
+    btnB.textContent = 'B';
+    btnB.dataset.btn = 'B';
+    abGrid.appendChild(btnA);
+    abGrid.appendChild(btnB);
+    right.appendChild(abGrid);
+    container.appendChild(left);
+    container.appendChild(right);
+    screen.appendChild(container);
+    // Attach pointer listeners on document to support sliding across buttons
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('pointermove', onPointerMove);
+    document.addEventListener('pointerup', onPointerUp);
+    document.addEventListener('pointercancel', onPointerCancel);
+    // keyboard support
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+    updateVisuals();
+  }
+
+  function onPointerDown(ev) {
+    // only respond for primary pointers and touches/mouse
+    const el = document.elementFromPoint(ev.clientX, ev.clientY);
+    const btn = el && el.dataset && el.dataset.btn;
+    if(btn) {
+      pointerMap.set(ev.pointerId, btn);
+      setPressed(btn, true);
+      try {
+        ev.target.setPointerCapture(ev.pointerId);
+      } catch (e) {}
+    } else {
+      // pointer down outside buttons: track pointer but no mapping
+      pointerMap.set(ev.pointerId, null);
+    }
+  }
+
+  function onPointerMove(ev) {
+    if(!pointerMap.has(ev.pointerId)) return;
+    const prev = pointerMap.get(ev.pointerId);
+    const el = document.elementFromPoint(ev.clientX, ev.clientY);
+    const btn = el && el.dataset && el.dataset.btn ? el.dataset.btn : null;
+    if(btn === prev) return; // nothing changed
+    // release previous
+    if(prev) setPressed(prev, false);
+    if(btn) setPressed(btn, true);
+    pointerMap.set(ev.pointerId, btn);
+  }
+
+  function onPointerUp(ev) {
+    const btn = pointerMap.get(ev.pointerId);
+    if(btn) setPressed(btn, false);
+    pointerMap.delete(ev.pointerId);
+    try {
+      ev.target.releasePointerCapture(ev.pointerId);
+    } catch (e) {}
+  }
+
+  function onPointerCancel(ev) {
+    const btn = pointerMap.get(ev.pointerId);
+    if(btn) setPressed(btn, false);
+    pointerMap.delete(ev.pointerId);
+  }
+  const KEY_BINDINGS = {
+    '8': 'up',
+    '2': 'down',
+    '4': 'left',
+    '6': 'right',
+    '7': 'upLeft',
+    '9': 'upRight',
+    '1': 'downLeft',
+    '3': 'downRight',
+    'z': 'A',
+    'Z': 'A',
+    'x': 'B',
+    'X': 'B'
+  };
+
+  function onKeyDown(e) {
+    const b = KEY_BINDINGS[e.key];
+    if(!b || !selectedPlayer.buttons.has(b) || keyMap.has(e.key)) return;
+    keyMap.set(e.key, b);
+    setPressed(b, true);
+  }
+
+  function onKeyUp(e) {
+    const b = keyMap.get(e.key) || KEY_BINDINGS[e.key];
+    if(!b) return;
+    keyMap.delete(e.key);
+    setPressed(b, false);
+  }
+
+  function setPressed(buttonName, value) {
+    if(!(buttonName in pressed)) return;
+    if(pressed[buttonName] === value) return;
+    pressed[buttonName] = value;
+    updateVisuals();
+    sendButtonsState();
+  }
+
+  function updateVisuals() {
+    document.querySelectorAll('[data-btn]').forEach(el => {
+      const btn = el.dataset.btn;
+      if(pressed[btn]) el.classList.add('pressed');
+      else el.classList.remove('pressed');
+    });
+  }
+
+  function computeButtonsValue() {
+    const bits = BUTTON_ORDER.map(b => pressed[b] ? '1' : '0').join('');
+    const value = parseInt(bits, 2) || 0;
+    return {
+      bits,
+      value
+    };
+  }
+
+  function sendButtonsState() {
+    const {
+      bits,
+      value
+    } = computeButtonsValue();
+    showStatus(`Buttons: ${bits} -> ${value} | ws: ${socket && socket.readyState===WebSocket.OPEN ? 'OPEN' : 'CLOSED'}`);
+    if(socket && socket.readyState === WebSocket.OPEN) {
+      try {
+        socket.send(value);
+      } catch (e) {
+        console.warn('ws send failed', e);
+      }
+    }
+  }
+
+  function setupWebSocket() {
+    safeCloseSocket();
+    showStatus('Conectando ao servidor...');
+    socket = new WebSocket(wsBase);
+    socket.addEventListener('open', () => {
+      showStatus('Conectado. Selecionando player...');
+      socket.send(selectedPlayer.id);
+      sendButtonsState();
+    });
+    socket.addEventListener('message', ev => {
+      showPopup('Erro do servidor', ev.data);
+      safeCloseSocket();
+    });
+    socket.addEventListener('close', ev => {
+      if(!overlay.classList.contains('show')) {
+        showPopup('Conexão fechada', 'A conexão com o servidor foi fechada.');
+      }
+      safeCloseSocket();
+    });
+    socket.addEventListener('error', e => {
+      console.error('ws error', e);
+      showPopup('Erro no WebSocket', 'Falha ao conectar com o servidor.');
+      safeCloseSocket();
+    });
+  }
+  loadPlayerList();
+  </script>
+</body>
+
+</html>
