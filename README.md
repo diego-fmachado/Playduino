@@ -4,45 +4,52 @@
 
 ---
 
-## 📌 Sobre o Projeto
+## 📚 Sobre o projeto
 
-O **Playduino** é uma plataforma voltada ao desenvolvimento de jogos simples em **plataformas microcontroladoras**, com foco no **ensino introdutório de programação**. O projeto utiliza o caráter lúdico dos jogos como ferramenta pedagógica, oferecendo **feedback visual claro**, desafios com **lógica direta** e um ambiente interativo que estimula o aprendizado.
+O **Playduino** é uma plataforma de desenvolvimento de jogos simples voltada ao **ensino introdutório de programação** em **plataformas microcontroladoras**. O projeto foi desenvolvido como **Trabalho de Conclusão de Curso (TCC)** apresentado ao **Curso de Ciência da Computação da Universidade Federal de Viçosa (UFV)**, como requisito para obtenção do título de **Bacharel em Ciência da Computação**.
 
-A proposta busca potencializar métodos tradicionais de ensino de programação, enriquecendo a experiência prática dos alunos e tornando o processo de aprendizagem mais envolvente e acessível.
+A proposta consiste no desenvolvimento de uma **interface de programação de alto nível**, focada na criação de jogos 2D simples, com o objetivo de:
 
----
-
-## 🎓 Contexto Acadêmico
-
-Este projeto foi desenvolvido como **Trabalho de Conclusão de Curso (TCC)** e apresentado ao:
-
-* **Curso:** Ciência da Computação
-* **Instituição:** Universidade Federal de Viçosa (UFV)
-
-Como requisito parcial para a obtenção do título de **Bacharel em Ciência da Computação**.
+* Apoiar **atividades práticas** em disciplinas introdutórias de programação;
+* Servir como **elemento demonstrativo** em eventos e exposições;
+* Estimular o interesse inicial de novos estudantes pelo aprendizado de programação.
 
 ---
 
-## 🧠 Motivação
+## 🎯 Motivação
 
-Embora cursos tradicionais de programação sejam eficazes quando bem estruturados, observa-se a oportunidade de:
+Embora cursos tradicionais de programação cumpram bem seu papel quando bem estruturados, este trabalho parte da observação de que o processo de aprendizado pode ser **potencializado** por meio de:
 
-* ✅ Aumentar o engajamento dos estudantes
-* 👁️ Fornecer feedback visual imediato
-* 🧩 Trabalhar lógica de forma clara e aplicada
-* 🕹️ Introduzir conceitos de programação por meio de atividades lúdicas
+* ✅ **Feedback visual claro e imediato**;
+* 🧠 **Problemas com aplicação lógica direta e compreensível**;
+* 🕹️ **Ambiente lúdico e interativo**, capaz de engajar o aluno.
 
-Além do uso em sala de aula, o Playduino também pode ser utilizado como **elemento de exibição em eventos**, despertando o interesse de novos aprendizes e incentivando o primeiro contato com a programação.
-
----
-
-## 🚀 Objetivos do Projeto
-
-* Desenvolver uma **interface de programação de alto nível** para jogos simples
-* Facilitar o ensino de programação em **sistemas embarcados**
-* Apoiar atividades práticas em disciplinas introdutórias
-* Estimular o aprendizado por meio de um ambiente **visual, interativo e lúdico**
+Nesse contexto, o Playduino busca unir conceitos fundamentais de programação a uma experiência prática e visual, utilizando jogos como ferramenta pedagógica.
 
 ---
 
-> 💡 *Playduino une educação, jogos e sistemas embarcados para tornar o aprendizado de programação mais intuitivo e envolvente.*
+## 🛠️ Características principais
+
+* Interface de programação voltada à criação de **jogos simples**;
+* Execução em **sistemas embarcados**;
+* Foco em **clareza, simplicidade e didática**.
+
+---
+
+## 🎥 Demonstrações
+
+### ▶️ Painel de LED simulado
+
+Vídeo demonstrando o funcionamento do projeto em um **painel de LED simulado**:
+
+🔗 [https://www.youtube.com/watch?v=Dmbao8aVTcE](https://www.youtube.com/watch?v=Dmbao8aVTcE)
+
+### ▶️ Painel de LED real
+
+Vídeo demonstrando o projeto em execução em um **painel de LED físico**:
+
+🔗 [https://www.youtube.com/watch?v=0YUTbckMS7k](https://www.youtube.com/watch?v=0YUTbckMS7k)
+
+---
+
+💡 *Playduino: aprendendo programação de forma visual, prática e divertida.* 🚀
