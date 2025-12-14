@@ -38,15 +38,11 @@ Nesse contexto, o Playduino busca unir conceitos fundamentais de programação a
 
 ## 🎥 Demonstrações
 
-### ▶️ Painel de LED simulado
-
-Vídeo demonstrando o funcionamento do projeto em um **painel de LED simulado**:
+▶️ Vídeo demonstrando o funcionamento do projeto em um **painel de LED simulado**:
 
 🔗 [https://www.youtube.com/watch?v=Dmbao8aVTcE](https://www.youtube.com/watch?v=Dmbao8aVTcE)
 
-### ▶️ Painel de LED real
-
-Vídeo demonstrando o projeto em execução em um **painel de LED físico**:
+▶️ Vídeo demonstrando o projeto em execução em um **painel de LED físico**:
 
 🔗 [https://www.youtube.com/watch?v=0YUTbckMS7k](https://www.youtube.com/watch?v=0YUTbckMS7k)
 
